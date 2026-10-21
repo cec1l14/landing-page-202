@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pink Floyd · Site de Fã</title>
+<meta name="description" content="Site de fã dedicado ao Pink Floyd: integrantes, história, álbuns e linha do tempo.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="#topo" class="logo">PINK FLOYD</a>
+  <nav>
+    <a href="#integrantes">Integrantes</a>
+    <a href="#historia">História</a>
+    <a href="#albuns">Álbuns</a>
+    <a href="#timeline">Linha do tempo</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="topo">
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="prism-wrap" id="prism3d">
+    <svg class="prism" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#2b2b2b"/>
+          <stop offset="1" stop-color="#050505"/>
+        </linearGradient>
+      </defs>
+
+      <!-- feixe branco entrando pela esquerda -->
+      <polygon points="0,282 722,278 722,286 0,290" fill="#fff"/>
+
+      <!-- espectro saindo pela direita -->
+      <g>
+        <polygon points="878,280 1600,50  1600,120"  fill="#e40303"/>
+        <polygon points="878,283 1600,120 1600,190"  fill="#ff8c00"/>
+        <polygon points="878,286 1600,190 1600,260"  fill="#ffed00"/>
+        <polygon points="878,289 1600,260 1600,330"  fill="#2dbb2d"/>
+        <polygon points="878,292 1600,330 1600,400"  fill="#1e90ff"/>
+        <polygon points="878,295 1600,400 1600,470"  fill="#4b3bd6"/>
+        <polygon points="878,298 1600,470 1600,540"  fill="#8a2be2"/>
+      </g>
+
+      <!-- prisma -->
+      <polygon points="800,100 975,450 625,450" fill="url(#face)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    </div>
+    <a class="scroll-hint" href="#nome" aria-label="Rolar para continuar"><span>Role para continuar</span><i></i></a>
+  </section>
+
+  <section class="name" id="nome">
+    <div class="trail" id="trail" aria-hidden="true"></div>
+    <div class="hero-text">
+      <h1>Pink Floyd</h1>
+      <p>Londres, 1965 — música que atravessa a luz e a escuridão.</p>
+      <a class="btn" href="#integrantes">Conhecer a banda</a>
+    </div>
+  </section>
+
+  <div class="rainbow-line"></div>
+
+  <section id="integrantes" class="band">
+    <div class="band-grid">
+      <div class="band-left">
+        <p class="eyebrow">A banda</p>
+        <h2 class="band-title">Pink Floyd</h2>
+        <div class="deck" id="deck" tabindex="0" aria-label="Cards dos integrantes">
+        <article class="mcard" data-i="0" style="--c:#ff5a4d">
+          <span class="num">01 / 05</span>
+          <h3>Syd Barrett</h3>
+          <span class="role">Guitarra e vocais · 1965–1968</span>
+          <p>Fundador e principal compositor dos primeiros singles e do álbum de estreia. Deixou a banda em 1968 e morreu em 2006. Sua memória inspirou "Shine On You Crazy Diamond".</p>
+        </article>
+        <article class="mcard" data-i="1" style="--c:#ff9a3d">
+          <span class="num">02 / 05</span>
+          <h3>Roger Waters</h3>
+          <span class="role">Baixo e vocais · 1965–1985</span>
+          <p>Principal letrista a partir de "The Dark Side of the Moon". Foi o criador conceitual de "The Wall". Deixou o grupo em 1985 e segue em carreira solo.</p>
+        </article>
+        <article class="mcard" data-i="2" style="--c:#ffe14d">
+          <span class="num">03 / 05</span>
+          <h3>Richard Wright</h3>
+          <span class="role">Teclados e vocais · 1965–1981, 1987–2008</span>
+          <p>Seus teclados deram a atmosfera característica ao som da banda, em faixas como "Us and Them" e "Echoes". Morreu em 2008.</p>
+        </article>
+        <article class="mcard" data-i="3" style="--c:#4ddc6b">
+          <span class="num">04 / 05</span>
+          <h3>Nick Mason</h3>
+          <span class="role">Bateria e percussão · 1965–hoje</span>
+          <p>Único integrante presente em todos os álbuns da banda. Também é autor do livro "Inside Out", sobre a história do grupo.</p>
+        </article>
+        <article class="mcard" data-i="4" style="--c:#4da3ff">
+          <span class="num">05 / 05</span>
+          <h3>David Gilmour</h3>
+          <span class="role">Guitarra e vocais · 1967–hoje</span>
+          <p>Entrou no fim de 1967 para reforçar a banda e acabou assumindo o posto de guitarrista e voz principal. Seus solos, como em "Comfortably Numb", são marca registrada.</p>
+        </article>
+        </div>
+        <div class="deck-ctrl">
+          <button class="arrow" id="prev" aria-label="Integrante anterior">&#8592;</button>
+          <div class="dots"><button class="dot" data-i="0" aria-label="Ver Syd Barrett"></button><button class="dot" data-i="1" aria-label="Ver Roger Waters"></button><button class="dot" data-i="2" aria-label="Ver Richard Wright"></button><button class="dot" data-i="3" aria-label="Ver Nick Mason"></button><button class="dot" data-i="4" aria-label="Ver David Gilmour"></button></div>
+          <button class="arrow" id="next" aria-label="Próximo integrante">&#8594;</button>
+        </div>
+      </div>
+      <svg class="stage" viewBox="0 0 720 460" role="img" aria-label="Desenho dos cinco integrantes do Pink Floyd">
+      <defs>
+      <radialGradient id="aura0"><stop offset="0" stop-color="#ff5a4d" stop-opacity=".6"/><stop offset=".6" stop-color="#ff5a4d" stop-opacity=".18"/><stop offset="1" stop-color="#ff5a4d" stop-opacity="0"/></radialGradient>
+      <radialGradient id="aura1"><stop offset="0" stop-color="#ff9a3d" stop-opacity=".6"/><stop offset=".6" stop-color="#ff9a3d" stop-opacity=".18"/><stop offset="1" stop-color="#ff9a3d" stop-opacity="0"/></radialGradient>
+      <radialGradient id="aura2"><stop offset="0" stop-color="#ffe14d" stop-opacity=".6"/><stop offset=".6" stop-color="#ffe14d" stop-opacity=".18"/><stop offset="1" stop-color="#ffe14d" stop-opacity="0"/></radialGradient>
+      <radialGradient id="aura3"><stop offset="0" stop-color="#4ddc6b" stop-opacity=".6"/><stop offset=".6" stop-color="#4ddc6b" stop-opacity=".18"/><stop offset="1" stop-color="#4ddc6b" stop-opacity="0"/></radialGradient>
+      <radialGradient id="aura4"><stop offset="0" stop-color="#4da3ff" stop-opacity=".6"/><stop offset=".6" stop-color="#4da3ff" stop-opacity=".18"/><stop offset="1" stop-color="#4da3ff" stop-opacity="0"/></radialGradient>
+      </defs>
+      <g class="member" data-i="0" style="--c:#ff5a4d" role="button" tabindex="0" aria-label="Syd Barrett"><ellipse class="aura" cx="70" cy="260" rx="84" ry="195" fill="url(#aura0)"/><g class="fig"><path class="cl" d="M40 284 L46 394 L28 406 L62 406 L67 284 Z"/><path class="cl" d="M100 284 L94 394 L112 406 L78 406 L73 284 Z"/><ellipse cx="45" cy="409" rx="19" ry="5"/><ellipse cx="95" cy="409" rx="19" ry="5"/><path class="cl" d="M34 170 Q36 158 56 156 L84 156 Q104 158 106 170 L100 286 Q70 292 40 286 Z"/><path class="d" d="M56 156 L66 190 L70 158 L74 190 L84 156"/><path class="d" d="M42 200 L98 200" opacity=".55"/><path class="d" d="M42 214 L98 214" opacity=".55"/><path class="d" d="M42 228 L98 228" opacity=".55"/><path class="d" d="M42 242 L98 242" opacity=".55"/><path class="d" d="M42 256 L98 256" opacity=".55"/><path class="d" d="M42 270 L98 270" opacity=".55"/><ellipse cx="70" cy="100" rx="30" ry="22"/><circle cx="43" cy="114" r="10"/><circle cx="97" cy="114" r="10"/><circle cx="47" cy="92" r="11"/><circle cx="93" cy="92" r="11"/><circle cx="70" cy="82" r="12"/><circle cx="58" cy="84" r="9"/><circle cx="82" cy="84" r="9"/><rect x="63" y="138" width="14" height="22" rx="5"/><circle cx="51" cy="121" r="4.5"/><circle cx="89" cy="121" r="4.5"/><ellipse cx="70" cy="118" rx="19" ry="24"/><path class="d" d="M52 106 Q64 96 73 106 Q81 99 88 108"/><path class="hr" d="M51 112 L48 130 L54 122 Z M89 112 L92 130 L86 122 Z"/><path class="d" d="M44 160 Q26 232 48 262"/><g transform="translate(68 284) rotate(35)"><path d="M-18 -26 L-8 -31 L12 -31 C28 -31 32 -14 28 0 C36 14 30 36 12 41 C-4 45 -26 37 -28 17 C-30 0 -26 -14 -18 -26 Z"/><circle class="d" cx="-10" cy="-6" r="3.4"/><circle class="d" cx="2" cy="-12" r="3.4"/><circle class="d" cx="14" cy="-4" r="3.4"/><circle class="d" cx="-4" cy="8" r="3.4"/><circle class="d" cx="10" cy="14" r="3.4"/><circle class="d" cx="-14" cy="18" r="3.4"/><circle class="d" cx="2" cy="26" r="3.4"/><rect x="-4" y="-80" width="8" height="52"/><path d="M-5 -80 L-9 -94 Q-9 -99 -4 -99 L6 -99 L5 -80 Z"/></g><path class="limb" d="M36 172 L24 232 L72 282"/><path class="limb-i" d="M36 172 L24 232 L72 282"/><circle class="hand" cx="72" cy="282" r="5.5"/><path class="limb" d="M104 172 L124 222 L104 233"/><path class="limb-i" d="M104 172 L124 222 L104 233"/><circle class="hand" cx="104" cy="233" r="5.5"/></g><text class="lbl" x="70" y="440" text-anchor="middle">Syd Barrett</text></g>
+      <g class="member" data-i="1" style="--c:#ff9a3d" role="button" tabindex="0" aria-label="Roger Waters"><ellipse class="aura" cx="215" cy="260" rx="84" ry="195" fill="url(#aura1)"/><g class="fig"><path class="cl" d="M185 284 L191 394 L173 406 L207 406 L212 284 Z"/><path class="cl" d="M245 284 L239 394 L257 406 L223 406 L218 284 Z"/><ellipse cx="190" cy="409" rx="19" ry="5"/><ellipse cx="240" cy="409" rx="19" ry="5"/><path class="cl" d="M179 170 Q181 158 201 156 L229 156 Q249 158 251 170 L245 286 Q215 292 185 286 Z"/><path class="d" d="M203 157 L215 186 L227 157"/><path class="d" d="M215 186 L215 286"/><rect x="208" y="138" width="14" height="22" rx="5"/><circle cx="196" cy="121" r="4.5"/><circle cx="234" cy="121" r="4.5"/><ellipse cx="215" cy="118" rx="19" ry="24"/><path class="hr" d="M195 112 Q192 86 215 88 Q238 86 235 112 Q225 99 212 101 Q202 99 195 112 Z"/><path class="d" d="M189 160 Q171 232 193 262"/><g transform="translate(213 284) rotate(35)"><path d="M-10 -30 C-24 -47 -35 -29 -27 -8 C-35 10 -29 35 -10 41 C0 44 14 42 22 35 C35 22 31 6 25 -6 C31 -25 23 -45 8 -30 Z"/><path class="d" d="M-12 -4 L14 -4 M-12 8 L14 8"/><rect x="-4" y="-104" width="8" height="76"/><path d="M-5 -104 L-9 -118 Q-9 -123 -4 -123 L7 -123 L5 -104 Z"/></g><path class="limb" d="M181 172 L169 232 L217 282"/><path class="limb-i" d="M181 172 L169 232 L217 282"/><circle class="hand" cx="217" cy="282" r="5.5"/><path class="limb" d="M249 172 L269 222 L254 225"/><path class="limb-i" d="M249 172 L269 222 L254 225"/><circle class="hand" cx="254" cy="225" r="5.5"/></g><text class="lbl" x="215" y="440" text-anchor="middle">Roger Waters</text></g>
+      <g class="member" data-i="2" style="--c:#ffe14d" role="button" tabindex="0" aria-label="Richard Wright"><ellipse class="aura" cx="360" cy="260" rx="84" ry="195" fill="url(#aura2)"/><g class="fig"><path class="cl" d="M330 284 L336 394 L318 406 L352 406 L357 284 Z"/><path class="cl" d="M390 284 L384 394 L402 406 L368 406 L363 284 Z"/><ellipse cx="335" cy="409" rx="19" ry="5"/><ellipse cx="385" cy="409" rx="19" ry="5"/><path class="cl" d="M324 170 Q326 158 346 156 L374 156 Q394 158 396 170 L390 286 Q360 292 330 286 Z"/><path class="d" d="M350 157 L360 176 L370 157"/><path class="d" d="M338 170 L340 280 M382 170 L380 280"/><path class="hr" d="M338 108 Q329 140 333 166 L346 148 L374 148 L387 166 Q391 140 382 108 Z"/><rect x="353" y="138" width="14" height="22" rx="5"/><circle cx="341" cy="121" r="4.5"/><circle cx="379" cy="121" r="4.5"/><ellipse cx="360" cy="118" rx="19" ry="24"/><path class="hr" d="M339 110 Q336 86 360 88 Q384 86 381 110 Q371 98 360 100 Q349 98 339 110 Z"/><path class="hr" d="M342 124 Q344 150 360 152 Q376 150 378 124 Q368 136 360 134 Q352 136 342 124 Z"/><path class="d" d="M298 308 L316 406 M422 308 L404 406 M298 406 L422 306 M422 406 L298 306"/><rect x="280" y="286" width="160" height="22"/><rect x="292" y="254" width="136" height="30" fill="rgba(255,255,255,.08)"/><rect class="d" x="300" y="258" width="22" height="8"/><rect class="d" x="330" y="258" width="22" height="8"/><path class="d" d="M356 258 L356 280 M364 258 L364 280 M372 258 L372 280 M380 258 L380 280 M388 258 L388 280"/><path class="d" d="M291.4 286 L291.4 308" stroke-width="1"/><path class="d" d="M302.9 286 L302.9 308" stroke-width="1"/><path class="d" d="M314.3 286 L314.3 308" stroke-width="1"/><path class="d" d="M325.7 286 L325.7 308" stroke-width="1"/><path class="d" d="M337.1 286 L337.1 308" stroke-width="1"/><path class="d" d="M348.6 286 L348.6 308" stroke-width="1"/><path class="d" d="M360.0 286 L360.0 308" stroke-width="1"/><path class="d" d="M371.4 286 L371.4 308" stroke-width="1"/><path class="d" d="M382.9 286 L382.9 308" stroke-width="1"/><path class="d" d="M394.3 286 L394.3 308" stroke-width="1"/><path class="d" d="M405.7 286 L405.7 308" stroke-width="1"/><path class="d" d="M417.1 286 L417.1 308" stroke-width="1"/><path class="d" d="M428.6 286 L428.6 308" stroke-width="1"/><path class="limb" d="M326 172 L304 226 L330 284"/><path class="limb-i" d="M326 172 L304 226 L330 284"/><circle class="hand" cx="330" cy="284" r="5.5"/><path class="limb" d="M394 172 L416 226 L390 284"/><path class="limb-i" d="M394 172 L416 226 L390 284"/><circle class="hand" cx="390" cy="284" r="5.5"/></g><text class="lbl" x="360" y="440" text-anchor="middle">Richard Wright</text></g>
+      <g class="member" data-i="3" style="--c:#4ddc6b" role="button" tabindex="0" aria-label="Nick Mason"><ellipse class="aura" cx="505" cy="260" rx="84" ry="195" fill="url(#aura3)"/><g class="fig"><path class="limb-l" d="M481 284 L453 300 L449 374"/><path class="limb-li" d="M481 284 L453 300 L449 374"/><path class="limb-l" d="M529 284 L557 300 L561 374"/><path class="limb-li" d="M529 284 L557 300 L561 374"/><path class="cl" d="M469 170 Q471 158 491 156 L519 156 Q539 158 541 170 L535 286 Q505 292 475 286 Z"/><path class="d" d="M492 157 Q505 170 518 157"/><rect x="498" y="138" width="14" height="22" rx="5"/><circle cx="486" cy="121" r="4.5"/><circle cx="524" cy="121" r="4.5"/><ellipse cx="505" cy="118" rx="19" ry="24"/><path class="hr" d="M484 114 Q478 86 497 86 Q505 79 513 86 Q532 86 526 114 Q517 100 505 104 Q493 100 484 114 Z"/><path class="hr" d="M486 112 L484 128 L490 120 Z M524 112 L526 128 L520 120 Z"/><path class="d" d="M415 268 L415 360 M409 266 L421 266 M409 262 L421 262"/><ellipse cx="415" cy="256" rx="16" ry="3.5"/><ellipse cx="415" cy="262" rx="16" ry="3.5"/><path class="d" d="M443 208 L443 300"/><ellipse cx="443" cy="206" rx="34" ry="6"/><path class="d" d="M575 218 L575 320"/><ellipse cx="575" cy="216" rx="36" ry="6"/><ellipse cx="443" cy="312" rx="26" ry="9"/><path class="d" d="M443 321 L443 372 M425 372 L461 372"/><ellipse cx="571" cy="330" rx="26" ry="10"/><path class="d" d="M549 336 L547 380 M593 336 L595 380"/><circle cx="505" cy="338" r="44"/><circle class="d" cx="505" cy="338" r="34"/><circle class="d" cx="505" cy="338" r="9"/><ellipse cx="481" cy="288" rx="21" ry="8"/><ellipse cx="529" cy="288" rx="21" ry="8"/><path class="d" d="M481 296 L481 312 M529 296 L529 312"/><path class="limb" d="M471 172 L451 224 L459 266"/><path class="limb-i" d="M471 172 L451 224 L459 266"/><circle class="hand" cx="459" cy="266" r="5.5"/><path class="d" d="M459 266 L433 246" stroke-width="2.4"/><path class="limb" d="M539 172 L559 222 L549 262"/><path class="limb-i" d="M539 172 L559 222 L549 262"/><circle class="hand" cx="549" cy="262" r="5.5"/><path class="d" d="M549 262 L573 242" stroke-width="2.4"/></g><text class="lbl" x="505" y="440" text-anchor="middle">Nick Mason</text></g>
+      <g class="member" data-i="4" style="--c:#4da3ff" role="button" tabindex="0" aria-label="David Gilmour"><ellipse class="aura" cx="650" cy="260" rx="84" ry="195" fill="url(#aura4)"/><g class="fig"><path class="cl" d="M620 284 L626 394 L608 406 L642 406 L647 284 Z"/><path class="cl" d="M680 284 L674 394 L692 406 L658 406 L653 284 Z"/><ellipse cx="625" cy="409" rx="19" ry="5"/><ellipse cx="675" cy="409" rx="19" ry="5"/><path class="cl" d="M614 170 Q616 158 636 156 L664 156 Q684 158 686 170 L680 286 Q650 292 620 286 Z"/><path class="d" d="M636 157 L648 192 M664 157 L652 192"/><path class="d" d="M650 192 L650 286"/><path class="hr" d="M628 106 Q618 142 620 178 L636 152 L664 152 L680 178 Q682 142 672 106 Z"/><rect x="643" y="138" width="14" height="22" rx="5"/><circle cx="631" cy="121" r="4.5"/><circle cx="669" cy="121" r="4.5"/><ellipse cx="650" cy="118" rx="19" ry="24"/><path class="hr" d="M629 112 Q627 88 650 88 Q673 88 671 112 Q664 98 650 96 Q636 98 629 112 Z"/><path class="d" d="M650 90 L650 98"/><path class="d" d="M624 160 Q606 232 628 262"/><g transform="translate(648 284) rotate(35)"><path d="M-12 -28 C-26 -42 -35 -30 -29 -14 C-37 -6 -37 22 -25 32 C-14 43 14 43 25 32 C35 22 35 -2 27 -12 C33 -27 22 -42 12 -28 Z"/><path class="pg" d="M-17 -12 Q0 -19 19 -11 L21 21 Q0 29 -17 22 Z"/><path class="d" d="M-12 -6 L12 -6 M-12 5 L12 5 M-12 15 L12 15" stroke-width="3"/><rect x="-4" y="-82" width="8" height="55"/><path d="M-5 -82 L-10 -97 Q-10 -102 -5 -102 L6 -102 Q9 -99 8 -95 L4 -82 Z"/><path class="d" d="M-8 -96 L-2 -96 M-8 -91 L-2 -91 M-8 -86 L-2 -86 M3 -98 L7 -98 M3 -93 L7 -93 M3 -88 L6 -88"/></g><path class="limb" d="M616 172 L604 232 L652 282"/><path class="limb-i" d="M616 172 L604 232 L652 282"/><circle class="hand" cx="652" cy="282" r="5.5"/><path class="limb" d="M684 172 L704 222 L684 233"/><path class="limb-i" d="M684 172 L704 222 L684 233"/><circle class="hand" cx="684" cy="233" r="5.5"/></g><text class="lbl" x="650" y="440" text-anchor="middle">David Gilmour</text></g>
+      </svg>
+    </div>
+    <a class="scroll-hint" href="#historia" aria-label="Rolar para continuar"><span>Role para continuar</span><i></i></a>
+  </section>
+
+  <section id="historia" class="alt">
+    <h2>História</h2>
+    <div class="text">
+      <p>O Pink Floyd surgiu em Londres em 1965, formado por estudantes de arquitetura e música. O nome veio de dois bluesmen americanos, Pink Anderson e Floyd Council, admirados por Syd Barrett.</p>
+      <p>Nos primeiros anos, a banda se firmou na cena psicodélica britânica, com shows de luzes e improvisos. O álbum de estreia, <em>The Piper at the Gates of Dawn</em> (1967), é dominado pela imaginação de Barrett.</p>
+      <p>Com a saída de Barrett e a entrada de David Gilmour, o grupo passou a explorar longas suítes e experimentações sonoras. A virada veio com <em>The Dark Side of the Moon</em> (1973), um álbum conceitual sobre pressões da vida moderna, que permaneceu por anos nas paradas e se tornou um dos discos mais vendidos da história.</p>
+      <p>Seguiram-se <em>Wish You Were Here</em> (1975), <em>Animals</em> (1977) e <em>The Wall</em> (1979), esta uma ópera-rock que ganhou turnê e filme. Tensões internas levaram à saída de Roger Waters em 1985.</p>
+      <p>Gilmour e Mason mantiveram o nome da banda e lançaram <em>A Momentary Lapse of Reason</em> (1987) e <em>The Division Bell</em> (1994), com grandes turnês mundiais. Em 2005, os quatro se reuniram no Live 8, em Londres. O último álbum, <em>The Endless River</em>, saiu em 2014.</p>
+    </div>
+  </section>
+
+  <section id="albuns">
+    <h2>Álbuns</h2>
+    <div class="albums">
+      <article class="album" style="--c1:#7a4fa0;--c2:#1b1230"><div class="cover"></div><h3>The Piper at the Gates of Dawn</h3><span>1967</span></article>
+      <article class="album" style="--c1:#c0763a;--c2:#2a1608"><div class="cover"></div><h3>A Saucerful of Secrets</h3><span>1968</span></article>
+      <article class="album" style="--c1:#4f8a4f;--c2:#0e220e"><div class="cover"></div><h3>Meddle</h3><span>1971</span></article>
+      <article class="album featured" style="--c1:#222;--c2:#000"><div class="cover prism-cover"></div><h3>The Dark Side of the Moon</h3><span>1973</span></article>
+      <article class="album" style="--c1:#c9a227;--c2:#2b2205"><div class="cover"></div><h3>Wish You Were Here</h3><span>1975</span></article>
+      <article class="album" style="--c1:#c76a8a;--c2:#2a0f1a"><div class="cover"></div><h3>Animals</h3><span>1977</span></article>
+      <article class="album" style="--c1:#bdbdbd;--c2:#1a1a1a"><div class="cover"></div><h3>The Wall</h3><span>1979</span></article>
+      <article class="album" style="--c1:#8a2c2c;--c2:#200808"><div class="cover"></div><h3>The Final Cut</h3><span>1983</span></article>
+      <article class="album" style="--c1:#3f7fb5;--c2:#0a1a2a"><div class="cover"></div><h3>A Momentary Lapse of Reason</h3><span>1987</span></article>
+      <article class="album" style="--c1:#5aa0a8;--c2:#0b1f22"><div class="cover"></div><h3>The Division Bell</h3><span>1994</span></article>
+      <article class="album" style="--c1:#6a8fd0;--c2:#0b1530"><div class="cover"></div><h3>The Endless River</h3><span>2014</span></article>
+    </div>
+    <p class="note">As capas acima são representações gráficas estilizadas, sem uso das artes oficiais.</p>
+  </section>
+
+  <section id="timeline" class="alt">
+    <h2>Linha do tempo</h2>
+    <ol class="timeline">
+      <li><time>1965</time><p>A banda se forma em Londres com Syd Barrett, Roger Waters, Richard Wright e Nick Mason.</p></li>
+      <li><time>1967</time><p>Lançamento do single "Arnold Layne" e do álbum de estreia, <em>The Piper at the Gates of Dawn</em>. David Gilmour entra no fim do ano.</p></li>
+      <li><time>1968</time><p>Syd Barrett deixa o grupo. Sai <em>A Saucerful of Secrets</em>.</p></li>
+      <li><time>1972</time><p>Lançamento do filme-concerto <em>Live at Pompeii</em>, gravado em 1971.</p></li>
+      <li><time>1973</time><p><em>The Dark Side of the Moon</em> chega às lojas em março e se torna um fenômeno de vendas.</p></li>
+      <li><time>1975</time><p><em>Wish You Were Here</em>, em homenagem a Syd Barrett.</p></li>
+      <li><time>1979</time><p><em>The Wall</em> é lançado. O filme estreia em 1982.</p></li>
+      <li><time>1985</time><p>Roger Waters deixa o Pink Floyd.</p></li>
+      <li><time>1987</time><p><em>A Momentary Lapse of Reason</em> e uma turnê mundial de grande porte.</p></li>
+      <li><time>1994</time><p><em>The Division Bell</em> e nova turnê.</p></li>
+      <li><time>1996</time><p>A banda é incluída no Rock and Roll Hall of Fame.</p></li>
+      <li><time>2005</time><p>Reunião com Waters no Live 8, em Londres, em 2 de julho.</p></li>
+      <li><time>2006</time><p>Morre Syd Barrett.</p></li>
+      <li><time>2008</time><p>Morre Richard Wright.</p></li>
+      <li><time>2014</time><p>Lançamento de <em>The Endless River</em>, o último álbum de estúdio.</p></li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <div class="rainbow-line"></div>
+  <p>Site de fã, sem fins lucrativos e sem vínculo oficial com o Pink Floyd. Todas as marcas e músicas pertencem aos seus respectivos detentores.</p>
+</footer>
+
+<script src="script.js"></script>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+const wrap = document.getElementById('prism3d');
+try {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  wrap.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 0, 9);
+
+  // Prisma triangular (seção equilátera, extrudada)
+  const s = 3, h = s * Math.sqrt(3) / 2;
+  const tri = new THREE.Shape();
+  tri.moveTo(-s / 2, -h / 3); tri.lineTo(s / 2, -h / 3); tri.lineTo(0, 2 * h / 3); tri.closePath();
+  const geo = new THREE.ExtrudeGeometry(tri, { depth: 2.2, bevelEnabled: false });
+  geo.translate(0, 0, -1.1);
+
+  const prism = new THREE.Group();
+  prism.add(new THREE.Mesh(geo, new THREE.MeshPhysicalMaterial({
+    color: 0x151515, roughness: 0.12, metalness: 0.2, clearcoat: 1,
+    transparent: true, opacity: 0.82
+  })));
+  prism.add(new THREE.LineSegments(
+    new THREE.EdgesGeometry(geo),
+    new THREE.LineBasicMaterial({ color: 0xffffff })
+  ));
+  prism.rotation.set(0.12, -0.35, 0);
+  scene.add(prism);
+
+  // Pulsação levemente colorida, restrita ao prisma
+  const haloTex = (() => {
+    const n = 128, c = document.createElement('canvas'); c.width = c.height = n;
+    const x = c.getContext('2d'), g = x.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
+    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.45, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = g; x.fillRect(0, 0, n, n); return new THREE.CanvasTexture(c);
+  })();
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: haloTex, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false
+  }));
+  halo.position.set(0, 0.1, -1.4);
+  halo.scale.set(5.4, 5.4, 1);
+  scene.add(halo);
+  const edges = prism.children[1];
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(-4, 5, 6); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x8a7bff, 1.2); rim.position.set(5, -2, -4); scene.add(rim);
+
+  // Feixe branco constante (sem pulsos): corre da esquerda até o prisma ao carregar a página
+  const beamGeo = new THREE.PlaneGeometry(30, 0.07); beamGeo.translate(15, 0, 0);
+  const beam = new THREE.Mesh(beamGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+  beam.position.set(-30.4, 0.04, 0);
+  scene.add(beam);
+
+  // Halo suave e fixo em volta do feixe; a ponta brilha só enquanto ele avança
+  const beamFx = { uniforms: { uHead: { value: 1 } } };
+  const fxGeo = new THREE.PlaneGeometry(30, 0.6); fxGeo.translate(15, 0, 0);
+  const beamFxMesh = new THREE.Mesh(fxGeo, new THREE.ShaderMaterial({
+    uniforms: beamFx.uniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: `
+      varying vec2 vUv; uniform float uHead;
+      void main(){
+        float d = uHead - vUv.x;
+        if (d < 0.0) discard;
+        float edge = pow(1.0 - abs(vUv.y * 2.0 - 1.0), 2.5);
+        float halo = 0.28 * edge * mix(0.4, 1.0, vUv.x);
+        float lead = exp(-d * 55.0) * edge * step(uHead, 0.999);
+        gl_FragColor = vec4(vec3(1.0), halo + 1.2 * lead);
+      }`
+  }));
+  beamFxMesh.position.set(-30.4, 0.04, 0.02);
+  scene.add(beamFxMesh);
+
+  const colors = [0xe40303, 0xff8c00, 0xffed00, 0x2dbb2d, 0x1e90ff, 0x4b3bd6, 0x8a2be2];
+  const L = 32, ox = 0.7, oy = -0.02, slope = 0.3;
+
+  // Cada cor é uma faixa reta que sai do prisma; o leque inteiro é escalado para "subir" até a lateral
+  const spectrum = new THREE.Group();
+  spectrum.position.set(ox, oy, 0);
+  colors.forEach((c, i) => {
+    const y1 = (3.5 - i) * slope * L / 7, y2 = (2.5 - i) * slope * L / 7;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0,  L, y1, 0,  L, y2, 0], 3));
+    spectrum.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide })));
+  });
+  scene.add(spectrum);
+
+  function resize() {
+    const w = wrap.clientWidth, hgt = wrap.clientHeight;
+    renderer.setSize(w, hgt, false);
+    camera.aspect = w / hgt; camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize); resize();
+
+  renderer.setAnimationLoop((ms) => {
+    const t = ms / 1000;
+    // o feixe chega ao prisma e, em seguida, o espectro sobe até a lateral; o prisma pulsa continuamente
+    const T0 = 0.5, D1 = 1.8, D2 = 1.7;
+    const p1 = reduce ? 1 : Math.min(1, Math.max(0, (t - T0) / D1));
+    const p2 = reduce ? 1 : Math.min(1, Math.max(0, (t - T0 - D1) / D2));
+    beam.scale.x = Math.max(0.001, p1);
+    beamFx.uniforms.uHead.value = p1;
+    const k = Math.max(0.001, 1 - Math.pow(1 - p2, 3));
+    spectrum.scale.set(k, k, 1);
+    const beat = reduce ? 0.5 : 0.5 + 0.5 * Math.sin(t * 1.6);   // ~4 s por pulsação
+    const hue = reduce ? 0.6 : (t * 0.03) % 1;                      // matiz percorre o arco-íris devagar
+    halo.material.color.setHSL(hue, 0.55, 0.6);
+    halo.material.opacity = 0.22 + 0.33 * beat;
+    const sc = 5.0 + 0.7 * beat; halo.scale.set(sc, sc, 1);
+    edges.material.color.setHSL(hue, 0.35, 0.78 + 0.14 * beat);
+    renderer.render(scene, camera);
+  });
+  wrap.classList.add('ready');
+} catch (err) {
+  console.warn('3D indisponível, usando versão estática.', err);
+}
+</script>
+
+</body>
+</html>
