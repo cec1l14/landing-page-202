@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pink Floyd · Site de Fã</title>
-<meta name="description" content="Site de fã dedicado ao Pink Floyd: integrantes, história, álbuns e linha do tempo.">
+<title>Pink Floyd · Ouça The Dark Side of the Moon</title>
+<meta name="description" content="Uma viagem pela banda, pela história e pelos álbuns do Pink Floyd. Ouça The Dark Side of the Moon no Spotify.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -615,6 +615,12 @@ function initPrism(wrap, inverted) {
           z = Math.PI + e * Math.PI;
         }
         scene.rotation.z = z;
+      } else {
+        // entrada do topo: o prisma nasce de cabeça para baixo e gira no lugar até a posição normal,
+        // com o mesmo giro de 180° que a seção final faz no retorno (o ciclo se fecha)
+        const q = reduce ? 1 : clamp((t - 0.1) / 1.9);
+        const e = q < 0.5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
+        scene.rotation.z = Math.PI + e * Math.PI;
       }
       renderer.render(scene, camera);
     });
