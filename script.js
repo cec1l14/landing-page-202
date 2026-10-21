@@ -441,3 +441,258 @@ addEventListener('resize', setNav); setNav();
     if (handle(dy > 0 ? 1 : -1)) { e.preventDefault(); touchY = e.touches[0].clientY; }
   }, { passive: false });
 })();
+
+// Linha do tempo: uma lua percorre uma trilha pelo universo, passando pelas quatro fases a cada marco
+(() => {
+  const sec = document.getElementById('timeline');
+  const view = document.getElementById('tlView');
+  const world = document.getElementById('tlWorld');
+  const cv = document.getElementById('tlStars');
+  if (!sec || !view || !world) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cards = [...sec.querySelectorAll('.tl-card')];
+  const N = cards.length;
+  const count = document.getElementById('tlCount');
+  const PHASES = ['Lua nova', 'Quarto crescente', 'Lua cheia', 'Quarto minguante'];
+  const NS = 'http://www.w3.org/2000/svg';
+  const wide = () => innerWidth > 860;
+  const el = (tag, attrs, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+
+  let Wv = 0, H = 0, pts = [], lens = [], total = 1;
+  let target = 0, s = 0, activeIdx = -1, lastT = performance.now();
+  let moonX = 0;
+
+  // --- trilha (SVG), marcos e lua ---
+  const svg = el('svg', {});
+  const defs = el('defs', {}, svg);
+  const grad = el('linearGradient', { id: 'tlRainbow', gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 1, y2: 0 }, defs);
+  [['0', '#e40303'], ['.2', '#ff8c00'], ['.4', '#ffed00'], ['.6', '#2dbb2d'], ['.8', '#1e90ff'], ['1', '#8a2be2']]
+    .forEach(([o, c]) => el('stop', { offset: o, 'stop-color': c }, grad));
+  const glow = el('filter', { id: 'tlGlow', x: '-10%', y: '-60%', width: '120%', height: '220%' }, defs);
+  el('feGaussianBlur', { stdDeviation: 4 }, glow);
+  const base = el('path', { fill: 'none', stroke: 'rgba(255,255,255,.22)', 'stroke-width': 2, 'stroke-dasharray': '2 9', 'stroke-linecap': 'round' }, svg);
+  const litGlow = el('path', { fill: 'none', stroke: 'url(#tlRainbow)', 'stroke-width': 7, 'stroke-linecap': 'round', filter: 'url(#tlGlow)', opacity: .55 }, svg);
+  const lit = el('path', { fill: 'none', stroke: 'url(#tlRainbow)', 'stroke-width': 3, 'stroke-linecap': 'round' }, svg);
+  world.appendChild(svg);
+
+  const nodes = cards.map((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'tl-node';
+    d.style.setProperty('--nc', `hsl(${Math.round(i / (N - 1) * 280)} 80% 66%)`);
+    d.innerHTML = '<span class="dot"></span><span class="yr">' + c.dataset.year + '</span>';
+    d.addEventListener('click', () => setTarget(i));
+    world.appendChild(d);
+    return d;
+  });
+
+  // lua com fases: parte iluminada = meia-lua + elipse do terminador
+  const moon = document.createElement('div');
+  moon.className = 'tl-moon';
+  moon.innerHTML =
+    '<svg viewBox="-30 -30 60 60" aria-hidden="true"><defs>' +
+    '<radialGradient id="tlMoonG" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fffef2"/><stop offset=".6" stop-color="#d4d8e2"/><stop offset="1" stop-color="#9aa0b2"/></radialGradient>' +
+    '<clipPath id="tlMoonClip"><path id="tlMoonClipPath" d=""/></clipPath></defs>' +
+    '<circle r="28" fill="#10131c" stroke="rgba(255,255,255,.2)" stroke-width="1"/>' +
+    '<g id="tlMoonGrp"><path id="tlMoonLit" d="" fill="url(#tlMoonG)"/>' +
+    '<g clip-path="url(#tlMoonClip)" fill="rgba(70,76,92,.4)"><circle cx="-8" cy="-10" r="5"/><circle cx="10" cy="6" r="7"/>' +
+    '<circle cx="-7" cy="13" r="3.4"/><circle cx="13" cy="-14" r="3"/><circle cx="0" cy="-1" r="3.6"/></g></g></svg>';
+  world.appendChild(moon);
+  const moonLit = moon.querySelector('#tlMoonLit');
+  const moonClip = moon.querySelector('#tlMoonClipPath');
+  const moonGrp = moon.querySelector('#tlMoonGrp');
+
+  function moonPath(k) {
+    const R = 28, rx = R * Math.abs(1 - 2 * k), sweep = k > 0.5 ? 1 : 0;
+    return `M0 ${-R} A${R} ${R} 0 0 1 0 ${R} A${rx.toFixed(2)} ${R} 0 0 ${sweep} 0 ${-R} Z`;
+  }
+
+  // --- geometria da trilha ---
+  function catmull(p) {
+    let d = `M${p[0].x} ${p[0].y}`;
+    for (let i = 0; i < p.length - 1; i++) {
+      const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+      d += ` C${(p1.x + (p2.x - p0.x) / 6).toFixed(1)} ${(p1.y + (p2.y - p0.y) / 6).toFixed(1)},` +
+           `${(p2.x - (p3.x - p1.x) / 6).toFixed(1)} ${(p2.y - (p3.y - p1.y) / 6).toFixed(1)},${p2.x} ${p2.y}`;
+    }
+    return d;
+  }
+  function lengthNear(p) {
+    let best = 0, bd = Infinity;
+    const S = 1500;
+    for (let k = 0; k <= S; k++) {
+      const q = base.getPointAtLength(total * k / S);
+      const dd = (q.x - p.x) ** 2 + (q.y - p.y) ** 2;
+      if (dd < bd) { bd = dd; best = k; }
+    }
+    return total * best / S;
+  }
+  function layout() {
+    Wv = view.clientWidth; H = view.clientHeight;
+    if (!Wv || !H) return;
+    const step = Math.max(240, Math.min(380, Wv * 0.34));
+    pts = cards.map((_, i) => ({ x: 120 + i * step, y: H * 0.64 + Math.sin(i * 1.15 + 0.4) * H * 0.13 }));
+    const worldW = pts[N - 1].x + Wv;
+    world.style.width = worldW + 'px'; world.style.height = H + 'px';
+    svg.setAttribute('width', worldW); svg.setAttribute('height', H);
+    grad.setAttribute('x2', worldW);
+    const d = catmull(pts);
+    base.setAttribute('d', d); lit.setAttribute('d', d); litGlow.setAttribute('d', d);
+    total = base.getTotalLength();
+    lens = pts.map(lengthNear);
+    nodes.forEach((n, i) => { n.style.left = pts[i].x + 'px'; n.style.top = pts[i].y + 'px'; });
+    cv && resizeStars();
+    render(performance.now());
+  }
+
+  // --- quadro a quadro ---
+  function render(now) {
+    if (!pts.length) return;
+    const i0 = Math.min(Math.floor(s), N - 1), i1 = Math.min(i0 + 1, N - 1), f = s - i0;
+    const L = lens[i0] + (lens[i1] - lens[i0]) * f;
+    const P = base.getPointAtLength(L);
+    moonX = P.x;
+    const bob = reduce ? 0 : Math.sin(now / 900) * 3;
+    moon.style.transform = `translate(${P.x - 28}px,${P.y - 28 - 58 + bob}px)`;
+    world.style.transform = `translateX(${Wv * 0.3 - P.x}px)`;
+    const da = `${L} ${total}`;
+    lit.style.strokeDasharray = da; litGlow.style.strokeDasharray = da;
+    nodes.forEach((n, i) => {
+      const g = Math.max(0, 1 - Math.abs(s - i) / 0.95);
+      n.style.setProperty('--g', (g * g).toFixed(3));
+    });
+    // fase contínua: cada marco avança um quarto do ciclo (nova, crescente, cheia, minguante)
+    const p = (s / 4) % 1;
+    const k = (1 - Math.cos(2 * Math.PI * p)) / 2;
+    const d = moonPath(k);
+    moonLit.setAttribute('d', d); moonClip.setAttribute('d', d);
+    moonGrp.setAttribute('transform', p < 0.5 ? '' : 'scale(-1 1)');
+    moon.style.filter = `drop-shadow(0 0 ${(6 + 16 * k).toFixed(1)}px rgba(200,215,255,${(0.25 + 0.45 * k).toFixed(2)}))`;
+    const idx = Math.max(0, Math.min(N - 1, Math.round(s)));
+    if (idx !== activeIdx) {
+      activeIdx = idx;
+      cards.forEach((c, j) => c.classList.toggle('active', j === idx));
+      sec.style.setProperty('--tc', nodes[idx].style.getPropertyValue('--nc'));
+    }
+    count.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0') + ' · ' + PHASES[idx % 4];
+  }
+
+  function setTarget(i) { target = Math.max(0, Math.min(N - 1, i)); if (reduce) s = target; }
+
+  // --- fundo de estrelas com paralaxe: acompanha o movimento da lua ---
+  let stars = [], sw = 0, sh = 0;
+  const sctx = cv ? cv.getContext('2d') : null;
+  function resizeStars() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    sw = sec.clientWidth; sh = sec.clientHeight;
+    cv.width = sw * dpr; cv.height = sh * dpr;
+    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(sw * sh / 3200);
+    stars = Array.from({ length: n }, () => {
+      const layer = Math.random();
+      return {
+        x: Math.random() * sw, y: Math.random() * sh,
+        z: layer < .5 ? 0.12 : layer < .85 ? 0.3 : 0.6,
+        r: layer < .5 ? 0.5 : layer < .85 ? 0.9 : 1.5,
+        ph: Math.random() * 6.28, sp: 0.5 + Math.random() * 1.5, h: Math.random() * 360
+      };
+    });
+  }
+  function drawStars(now) {
+    sctx.clearRect(0, 0, sw, sh);
+    for (const st of stars) {
+      let x = (st.x - moonX * st.z) % sw; if (x < 0) x += sw;
+      const a = (reduce ? .8 : .45 + .45 * Math.sin(now / 1000 * st.sp + st.ph)) * (st.z > .5 ? 1 : .8);
+      sctx.fillStyle = `hsla(${st.h},35%,88%,${a.toFixed(2)})`;
+      sctx.beginPath(); sctx.arc(x, st.y, st.r, 0, 6.2832); sctx.fill();
+    }
+  }
+
+  function frame(now) {
+    const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+    const diff = target - s;
+    if (Math.abs(diff) > 0.0005) s += diff * (1 - Math.exp(-dt * 4.2)); else s = target;
+    render(now);
+    if (sctx) drawStars(now);
+    requestAnimationFrame(frame);
+  }
+
+  document.getElementById('tlPrev').addEventListener('click', () => setTarget(Math.round(target) - 1));
+  document.getElementById('tlNext').addEventListener('click', () => setTarget(Math.round(target) + 1));
+
+  // --- entrada: a rolagem avança um marco por vez enquanto a seção ocupa a tela ---
+  let coolUntil = 0, holdUntil = 0, pulling = false, touchY = null, touchX = null;
+  const navH = () => nav.offsetHeight;
+  const fills = () => { const r = sec.getBoundingClientRect(); return r.top <= navH() + 6 && r.bottom >= innerHeight - 6; };
+  const alignTop = () => sec.offsetTop - navH();
+
+  function pull(fromBelow) {
+    pulling = true;
+    if (fromBelow) setTarget(N - 1);
+    scrollTo({ top: alignTop(), behavior: reduce ? 'auto' : 'smooth' });
+    holdUntil = performance.now() + 900;
+    setTimeout(() => { pulling = false; }, reduce ? 60 : 950);
+  }
+  function handle(dir) {
+    if (!wide()) return false;
+    const now = performance.now();
+    if (pulling) return true;
+    const r = sec.getBoundingClientRect();
+    if (fills()) {
+      if (now < holdUntil) return true;
+      const cur = Math.round(target), next = cur + dir;
+      if (next < 0 || next > N - 1) return false;
+      if (now < coolUntil) return true;
+      setTarget(next);
+      coolUntil = now + 800;
+      if (next === 0 || next === N - 1) holdUntil = now + 900;
+      return true;
+    }
+    if (dir > 0 && r.top > navH() + 6 && r.top < innerHeight * 0.55) { pull(false); return true; }
+    if (dir < 0 && r.bottom > navH() + 6 && r.bottom < innerHeight * 0.55 && r.top < 0) { pull(true); return true; }
+    return false;
+  }
+
+  addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) < 4) return;
+    if (handle(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
+  }, { passive: false });
+
+  addEventListener('keydown', (e) => {
+    if (e.target.closest('input,textarea,select')) return;
+    const r = sec.getBoundingClientRect();
+    const center = r.top < innerHeight / 2 && r.bottom > innerHeight / 2;
+    if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && center) {
+      e.preventDefault();
+      setTarget(Math.round(target) + (e.key === 'ArrowRight' ? 1 : -1));
+      return;
+    }
+    if (e.target.closest('button')) return;
+    const dir = ['ArrowDown', 'PageDown', ' '].includes(e.key) ? 1 : ['ArrowUp', 'PageUp'].includes(e.key) ? -1 : 0;
+    if (dir && handle(dir)) e.preventDefault();
+  });
+
+  addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; touchX = e.touches[0].clientX; }, { passive: true });
+  addEventListener('touchmove', (e) => {
+    if (touchY === null) return;
+    const dy = touchY - e.touches[0].clientY;
+    if (Math.abs(dy) < 28) return;
+    if (handle(dy > 0 ? 1 : -1)) { e.preventDefault(); touchY = e.touches[0].clientY; }
+  }, { passive: false });
+  // no celular a rolagem é livre: deslizar para os lados sobre a trilha troca de marco
+  view.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) setTarget(Math.round(target) + (dx > 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
+
+  addEventListener('resize', layout);
+  layout();
+  setTimeout(layout, 300);
+  requestAnimationFrame(frame);
+})();

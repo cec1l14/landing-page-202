@@ -77,18 +77,12 @@ h2::after{content:"";display:block;width:120px;height:3px;margin:.8rem auto 0;ba
 
 
 
-.timeline{list-style:none;position:relative;max-width:760px;padding-left:2rem}
-.timeline::before{
-  content:"";position:absolute;left:6px;top:0;bottom:0;width:3px;
-  background:linear-gradient(#e40303,#ff8c00,#ffed00,#2dbb2d,#1e90ff,#4b3bd6,#8a2be2);
-}
-.timeline li{position:relative;margin-bottom:2rem;opacity:0;transform:translateY(16px);transition:.6s}
-.timeline li.visible{opacity:1;transform:none}
-.timeline li::before{
-  content:"";position:absolute;left:calc(-2rem + 0px);top:.45rem;width:15px;height:15px;border-radius:50%;
-  background:#000;border:3px solid #fff;
-}
-.timeline time{font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:1.2rem;letter-spacing:.1em}
+
+
+
+
+
+
 
 footer{text-align:center;color:var(--muted);font-size:.8rem;padding-bottom:2rem}
 footer p{max-width:700px;margin:1.5rem auto 0;padding:0 1rem}
@@ -346,5 +340,65 @@ footer p{max-width:700px;margin:1.5rem auto 0;padding:0 1rem}
   .alb-cover,.alb-info,.alb-tilt{transition:none}
 }
 
-.kbd-hint{font-family:Helvetica,Arial,sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:#6a6a6a;margin-top:.8rem}
-@media (max-width:860px){.kbd-hint{display:none}}
+@media (max-width:860px){}
+
+/* Linha do tempo: trilha pelo universo, lua em fases e marcos que crescem ao se aproximar */
+.tl{
+  position:relative;overflow:hidden;max-width:none;
+  min-height:calc(100vh - var(--nav,44px));padding:2.6rem 1.5rem 6rem;
+  display:flex;flex-direction:column;justify-content:space-between;gap:1.2rem;
+  background:radial-gradient(900px 420px at 30% 80%,rgba(120,90,200,.14),transparent 70%);
+}
+.tl-stars{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.tl-top,.tl-view,.tl-bottom{position:relative;z-index:1}
+.tl-top{
+  width:100%;max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:3rem;align-items:start;
+}
+.tl-cards{display:grid}
+.tl-card{
+  grid-area:1/1;padding-left:1.6rem;border-left:2px solid var(--tc);
+  opacity:0;visibility:hidden;transform:translateY(20px) scale(.96);transform-origin:left top;
+  transition:opacity .45s,transform .6s cubic-bezier(.2,.8,.2,1),visibility 0s .6s;
+}
+.tl-card.active{opacity:1;visibility:visible;transform:none;transition:opacity .5s .1s,transform .65s .1s cubic-bezier(.2,.8,.2,1),visibility 0s}
+.tl-card .yr{
+  font-family:Helvetica,Arial,sans-serif;font-weight:200;line-height:1;letter-spacing:.04em;
+  font-size:clamp(3.2rem,8vw,6rem);color:var(--tc);text-shadow:0 0 34px color-mix(in srgb,var(--tc) 55%,transparent);
+}
+.tl-card h3{font-family:Helvetica,Arial,sans-serif;font-weight:300;font-size:clamp(1.3rem,2.4vw,1.8rem);margin:.5rem 0 .6rem}
+.tl-card p{font-size:1rem;line-height:1.6;max-width:36rem}
+
+.tl-view{
+  width:100%;height:clamp(200px,34vh,320px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.tl-world{position:absolute;left:0;top:0;will-change:transform}
+.tl-world svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.tl-node{position:absolute;width:0;height:0}
+.tl-node .dot{
+  position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;cursor:pointer;
+  background:var(--nc);box-shadow:0 0 calc(6px + 38px * var(--g,0)) var(--nc);
+  transform:scale(calc(1 + 2.8 * var(--g,0)));
+}
+.tl-node .yr{
+  position:absolute;left:0;top:calc(14px + 26px * var(--g,0));white-space:nowrap;cursor:pointer;
+  transform:translateX(-50%) scale(calc(1 + .6 * var(--g,0)));
+  font-family:Helvetica,Arial,sans-serif;font-size:.78rem;letter-spacing:.14em;
+  color:rgba(255,255,255,calc(.45 + .55 * var(--g,0)));
+}
+.tl-moon{position:absolute;left:0;top:0;width:56px;height:56px;pointer-events:none}
+.tl-moon svg{display:block;width:100%;height:100%;overflow:visible}
+
+.tl-bottom{display:flex;flex-direction:column;align-items:center}
+.tl-bottom .alb-count{min-width:13rem}
+.tl-bottom 
+
+@media (max-width:860px){
+  .tl{padding-bottom:7rem}
+  .tl-top{grid-template-columns:minmax(0,1fr);gap:1.6rem}
+  .tl-card .yr{font-size:3.2rem}
+  .tl-bottom .alb-count{min-width:11rem;font-size:.7rem}
+}
+@media (prefers-reduced-motion:reduce){.tl-card{transition:none}}

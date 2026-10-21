@@ -12,9 +12,9 @@
 <header class="nav">
   <a href="#topo" class="logo">PINK FLOYD</a>
   <nav>
-    <a href="#integrantes">Integrantes</a>
+    <a href="#integrantes">Banda</a>
     <a href="#historia">História</a>
-    <a href="#albuns">Álbuns</a>
+    <a href="#albuns">Álbum</a>
     <a href="#timeline">Linha do tempo</a>
   </nav>
 </header>
@@ -105,7 +105,6 @@
           <div class="dots"><button class="dot" data-i="0" aria-label="Ver Syd Barrett"></button><button class="dot" data-i="1" aria-label="Ver Roger Waters"></button><button class="dot" data-i="2" aria-label="Ver Richard Wright"></button><button class="dot" data-i="3" aria-label="Ver Nick Mason"></button><button class="dot" data-i="4" aria-label="Ver David Gilmour"></button></div>
           <button class="arrow" id="next" aria-label="Próximo integrante">&#8594;</button>
         </div>
-        <p class="kbd-hint">Use as setas &#8592; &#8594; do teclado</p>
       </div>
       <svg class="stage" viewBox="0 0 720 460" role="img" aria-label="Desenho dos cinco integrantes do Pink Floyd">
       <defs>
@@ -192,7 +191,6 @@
           <button class="arrow" id="albNext" aria-label="Próximo álbum">&#8594;</button>
         </div>
         <div class="adots"><button class="adot" data-i="0" aria-label="Ver The Piper at the Gates of Dawn"></button><button class="adot" data-i="1" aria-label="Ver A Saucerful of Secrets"></button><button class="adot" data-i="2" aria-label="Ver Meddle"></button><button class="adot" data-i="3" aria-label="Ver The Dark Side of the Moon"></button><button class="adot" data-i="4" aria-label="Ver Wish You Were Here"></button><button class="adot" data-i="5" aria-label="Ver Animals"></button><button class="adot" data-i="6" aria-label="Ver The Wall"></button><button class="adot" data-i="7" aria-label="Ver The Final Cut"></button><button class="adot" data-i="8" aria-label="Ver A Momentary Lapse of Reason"></button><button class="adot" data-i="9" aria-label="Ver The Division Bell"></button><button class="adot" data-i="10" aria-label="Ver The Endless River"></button></div>
-        <p class="kbd-hint">Use as setas &#8592; &#8594; do teclado</p>
       </div>
       <div class="alb-right" id="albInfo">
         <article class="alb-info" data-i="0" data-ac="#b48cf0" style="--ac:#b48cf0">
@@ -310,29 +308,106 @@
     <a class="scroll-hint" href="#timeline" aria-label="Rolar para continuar"><span>Role para continuar</span><i></i></a>
   </section>
 
-  <section id="timeline" class="alt">
-    <h2>Linha do tempo</h2>
-    <ol class="timeline">
-      <li><time>1965</time><p>A banda se forma em Londres com Syd Barrett, Roger Waters, Richard Wright e Nick Mason.</p></li>
-      <li><time>1967</time><p>Lançamento do single "Arnold Layne" e do álbum de estreia, <em>The Piper at the Gates of Dawn</em>. David Gilmour entra no fim do ano.</p></li>
-      <li><time>1968</time><p>Syd Barrett deixa o grupo. Sai <em>A Saucerful of Secrets</em>.</p></li>
-      <li><time>1972</time><p>Lançamento do filme-concerto <em>Live at Pompeii</em>, gravado em 1971.</p></li>
-      <li><time>1973</time><p><em>The Dark Side of the Moon</em> chega às lojas em março e se torna um fenômeno de vendas.</p></li>
-      <li><time>1975</time><p><em>Wish You Were Here</em>, em homenagem a Syd Barrett.</p></li>
-      <li><time>1979</time><p><em>The Wall</em> é lançado. O filme estreia em 1982.</p></li>
-      <li><time>1985</time><p>Roger Waters deixa o Pink Floyd.</p></li>
-      <li><time>1987</time><p><em>A Momentary Lapse of Reason</em> e uma turnê mundial de grande porte.</p></li>
-      <li><time>1994</time><p><em>The Division Bell</em> e nova turnê.</p></li>
-      <li><time>1996</time><p>A banda é incluída no Rock and Roll Hall of Fame.</p></li>
-      <li><time>2005</time><p>Reunião com Waters no Live 8, em Londres, em 2 de julho.</p></li>
-      <li><time>2006</time><p>Morre Syd Barrett.</p></li>
-      <li><time>2008</time><p>Morre Richard Wright.</p></li>
-      <li><time>2014</time><p>Lançamento de <em>The Endless River</em>, o último álbum de estúdio.</p></li>
-    </ol>
+  <section id="timeline" class="tl">
+    <canvas class="tl-stars" id="tlStars" aria-hidden="true"></canvas>
+    <div class="tl-top">
+      <div class="tl-head">
+        <p class="eyebrow">Pink Floyd</p>
+        <h2 class="band-title">Linha do tempo</h2>
+      </div>
+      <div class="tl-cards" id="tlCards">
+        <article class="tl-card" data-i="0" data-year="1965" data-title="A banda se forma" style="--tc:hsl(0 75% 70%)">
+          <div class="yr">1965</div>
+          <h3>A banda se forma</h3>
+          <p>A banda se forma em Londres com Syd Barrett, Roger Waters, Richard Wright e Nick Mason.</p>
+        </article>
+        <article class="tl-card" data-i="1" data-year="1967" data-title="Os primeiros discos" style="--tc:hsl(20 75% 70%)">
+          <div class="yr">1967</div>
+          <h3>Os primeiros discos</h3>
+          <p>Lançamento do single "Arnold Layne" e do álbum de estreia, <em>The Piper at the Gates of Dawn</em>. David Gilmour entra no fim do ano.</p>
+        </article>
+        <article class="tl-card" data-i="2" data-year="1968" data-title="A saída de Barrett" style="--tc:hsl(40 75% 70%)">
+          <div class="yr">1968</div>
+          <h3>A saída de Barrett</h3>
+          <p>Syd Barrett deixa o grupo. Sai <em>A Saucerful of Secrets</em>.</p>
+        </article>
+        <article class="tl-card" data-i="3" data-year="1972" data-title="Live at Pompeii" style="--tc:hsl(60 75% 70%)">
+          <div class="yr">1972</div>
+          <h3>Live at Pompeii</h3>
+          <p>Lançamento do filme-concerto <em>Live at Pompeii</em>, gravado em 1971.</p>
+        </article>
+        <article class="tl-card" data-i="4" data-year="1973" data-title="The Dark Side of the Moon" style="--tc:hsl(80 75% 70%)">
+          <div class="yr">1973</div>
+          <h3>The Dark Side of the Moon</h3>
+          <p><em>The Dark Side of the Moon</em> chega às lojas em março e se torna um fenômeno de vendas. O disco ficou mais de 14 anos na parada Billboard 200.</p>
+        </article>
+        <article class="tl-card" data-i="5" data-year="1975" data-title="Wish You Were Here" style="--tc:hsl(100 75% 70%)">
+          <div class="yr">1975</div>
+          <h3>Wish You Were Here</h3>
+          <p><em>Wish You Were Here</em>, em homenagem a Syd Barrett.</p>
+        </article>
+        <article class="tl-card" data-i="6" data-year="1979" data-title="The Wall" style="--tc:hsl(120 75% 70%)">
+          <div class="yr">1979</div>
+          <h3>The Wall</h3>
+          <p><em>The Wall</em> é lançado. O filme estreia em 1982.</p>
+        </article>
+        <article class="tl-card" data-i="7" data-year="1985" data-title="A saída de Waters" style="--tc:hsl(140 75% 70%)">
+          <div class="yr">1985</div>
+          <h3>A saída de Waters</h3>
+          <p>Roger Waters deixa o Pink Floyd.</p>
+        </article>
+        <article class="tl-card" data-i="8" data-year="1987" data-title="A volta com nova formação" style="--tc:hsl(160 75% 70%)">
+          <div class="yr">1987</div>
+          <h3>A volta com nova formação</h3>
+          <p><em>A Momentary Lapse of Reason</em> e uma turnê mundial de grande porte.</p>
+        </article>
+        <article class="tl-card" data-i="9" data-year="1994" data-title="The Division Bell" style="--tc:hsl(180 75% 70%)">
+          <div class="yr">1994</div>
+          <h3>The Division Bell</h3>
+          <p><em>The Division Bell</em> e nova turnê.</p>
+        </article>
+        <article class="tl-card" data-i="10" data-year="1996" data-title="Rock and Roll Hall of Fame" style="--tc:hsl(200 75% 70%)">
+          <div class="yr">1996</div>
+          <h3>Rock and Roll Hall of Fame</h3>
+          <p>A banda é incluída no Rock and Roll Hall of Fame.</p>
+        </article>
+        <article class="tl-card" data-i="11" data-year="2005" data-title="Reencontro no Live 8" style="--tc:hsl(220 75% 70%)">
+          <div class="yr">2005</div>
+          <h3>Reencontro no Live 8</h3>
+          <p>Reunião com Waters no Live 8, em Londres, em 2 de julho. Foi a primeira vez que os quatro tocaram juntos desde 1981.</p>
+        </article>
+        <article class="tl-card" data-i="12" data-year="2006" data-title="Morre Syd Barrett" style="--tc:hsl(240 75% 70%)">
+          <div class="yr">2006</div>
+          <h3>Morre Syd Barrett</h3>
+          <p>Morre Syd Barrett.</p>
+        </article>
+        <article class="tl-card" data-i="13" data-year="2008" data-title="Morre Richard Wright" style="--tc:hsl(260 75% 70%)">
+          <div class="yr">2008</div>
+          <h3>Morre Richard Wright</h3>
+          <p>Morre Richard Wright.</p>
+        </article>
+        <article class="tl-card" data-i="14" data-year="2014" data-title="The Endless River" style="--tc:hsl(280 75% 70%)">
+          <div class="yr">2014</div>
+          <h3>The Endless River</h3>
+          <p>Lançamento de <em>The Endless River</em>, o último álbum de estúdio.</p>
+        </article>
+      </div>
+    </div>
+    <div class="tl-view" id="tlView" aria-label="Trilha pelo universo com os marcos da banda">
+      <div class="tl-world" id="tlWorld"></div>
+    </div>
+    <div class="tl-bottom">
+      <div class="deck-ctrl">
+        <button class="arrow" id="tlPrev" aria-label="Marco anterior">&#8592;</button>
+        <span class="alb-count" id="tlCount">01 / 15</span>
+        <button class="arrow" id="tlNext" aria-label="Próximo marco">&#8594;</button>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#rodape" aria-label="Rolar para o fim da página"><span>Role para continuar</span><i></i></a>
   </section>
 </main>
 
-<footer>
+<footer id="rodape">
   <div class="rainbow-line"></div>
   <p>Site de fã, sem fins lucrativos e sem vínculo oficial com o Pink Floyd. Todas as marcas e músicas pertencem aos seus respectivos detentores.</p>
 </footer>
