@@ -292,9 +292,14 @@ addEventListener('resize', setNav); setNav();
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo(+f.dataset.i); }
     });
   });
-  deck.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); goTo(idx + 1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(idx - 1); }
+  // setas do teclado: valem enquanto esta seção está no centro da tela
+  addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    if (e.target.closest('input,textarea,select')) return;
+    const r = document.getElementById('integrantes').getBoundingClientRect();
+    if (!(r.top < innerHeight / 2 && r.bottom > innerHeight / 2)) return;
+    e.preventDefault();
+    goTo(idx + (e.key === 'ArrowRight' ? 1 : -1));
   });
 
   // arrastar com o mouse (no toque, a rolagem lateral já é nativa)
@@ -319,4 +324,120 @@ addEventListener('resize', setNav); setNav();
   deck.addEventListener('pointercancel', endDrag);
 
   setActive(0);
+})();
+
+// Álbuns: a capa acompanha o mouse e cada rolagem na seção avança para o próximo álbum
+(() => {
+  const sec = document.getElementById('albuns');
+  const stage = document.getElementById('albStage');
+  if (!sec || !stage) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const covers = [...sec.querySelectorAll('.alb-cover')];
+  const infos = [...sec.querySelectorAll('.alb-info')];
+  const dots = [...sec.querySelectorAll('.adot')];
+  const count = document.getElementById('albCount');
+  const tilt = document.getElementById('albTilt');
+  const N = covers.length;
+  const wide = () => innerWidth > 860;
+  let idx = 0, coolUntil = 0, holdUntil = 0, pulling = false, touchY = null;
+
+  function setActive(i, dir) {
+    i = Math.max(0, Math.min(N - 1, i));
+    idx = i;
+    covers.forEach((c, k) => {
+      c.classList.toggle('active', k === i);
+      c.classList.toggle('past', k < i);
+    });
+    infos.forEach((f, k) => f.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
+    sec.style.setProperty('--ac', infos[i].dataset.ac);
+  }
+  setActive(0);
+
+  document.getElementById('albPrev').addEventListener('click', () => setActive(idx - 1));
+  document.getElementById('albNext').addEventListener('click', () => setActive(idx + 1));
+  dots.forEach((d) => d.addEventListener('click', () => setActive(+d.dataset.i)));
+
+  // a seção acompanha o mouse: a capa se inclina e o brilho de fundo segue o cursor
+  sec.addEventListener('pointermove', (e) => {
+    const r = sec.getBoundingClientRect();
+    sec.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    sec.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    if (reduce || !wide()) return;
+    const s = stage.getBoundingClientRect();
+    const nx = Math.max(-1, Math.min(1, (e.clientX - (s.left + s.width / 2)) / (r.width / 2)));
+    const ny = Math.max(-1, Math.min(1, (e.clientY - (s.top + s.height / 2)) / (r.height / 2)));
+    tilt.style.setProperty('--ry', (nx * 16).toFixed(1) + 'deg');
+    tilt.style.setProperty('--rx', (-ny * 12).toFixed(1) + 'deg');
+    tilt.style.setProperty('--gx', (50 + nx * 40).toFixed(0) + '%');
+    tilt.style.setProperty('--gy', (35 + ny * 40).toFixed(0) + '%');
+  }, { passive: true });
+  sec.addEventListener('pointerleave', () => {
+    tilt.style.setProperty('--rx', '0deg'); tilt.style.setProperty('--ry', '0deg');
+  });
+
+  // a rolagem troca de álbum enquanto a seção ocupa a tela; nas pontas, a página segue normalmente
+  const navH = () => nav.offsetHeight;
+  const fills = () => { const r = sec.getBoundingClientRect(); return r.top <= navH() + 6 && r.bottom >= innerHeight - 6; };
+  const alignTop = () => sec.offsetTop - navH();
+
+  function pull(fromBelow) {
+    pulling = true;
+    if (fromBelow) setActive(N - 1);
+    scrollTo({ top: alignTop(), behavior: reduce ? 'auto' : 'smooth' });
+    holdUntil = performance.now() + 900;
+    setTimeout(() => { pulling = false; }, reduce ? 60 : 950);
+  }
+
+  // decide o que fazer com um gesto de rolagem (dir = +1 para baixo, -1 para cima); true = gesto consumido
+  function handle(dir) {
+    if (!wide()) return false;
+    const now = performance.now();
+    if (pulling) return true;
+    const r = sec.getBoundingClientRect();
+    if (fills()) {
+      if (now < holdUntil) return true;
+      const next = idx + dir;
+      if (next < 0 || next > N - 1) return false;       // nas pontas, libera a rolagem da página
+      if (now < coolUntil) return true;
+      setActive(next);
+      coolUntil = now + 750;
+      if (next === 0 || next === N - 1) holdUntil = now + 900;   // evita que a inércia já saia da seção
+      return true;
+    }
+    // entrando pelo topo ou por baixo: leva a seção até a tela inteira
+    if (dir > 0 && r.top > navH() + 6 && r.top < innerHeight * 0.55) { pull(false); return true; }
+    if (dir < 0 && r.bottom > navH() + 6 && r.bottom < innerHeight * 0.55 && r.top < 0) { pull(true); return true; }
+    return false;
+  }
+
+  addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) < 4) return;
+    if (handle(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
+  }, { passive: false });
+
+  addEventListener('keydown', (e) => {
+    if (e.target.closest('input,textarea,button')) return;
+    const dir = ['ArrowDown', 'PageDown', ' '].includes(e.key) ? 1 : ['ArrowUp', 'PageUp'].includes(e.key) ? -1 : 0;
+    if (dir && handle(dir)) e.preventDefault();
+  });
+
+  // setas esquerda/direita trocam de álbum enquanto a seção está no centro da tela
+  addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    if (e.target.closest('input,textarea,select')) return;
+    const r = sec.getBoundingClientRect();
+    if (!(r.top < innerHeight / 2 && r.bottom > innerHeight / 2)) return;
+    e.preventDefault();
+    setActive(idx + (e.key === 'ArrowRight' ? 1 : -1));
+  });
+
+  addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchmove', (e) => {
+    if (touchY === null) return;
+    const dy = touchY - e.touches[0].clientY;
+    if (Math.abs(dy) < 28) return;
+    if (handle(dy > 0 ? 1 : -1)) { e.preventDefault(); touchY = e.touches[0].clientY; }
+  }, { passive: false });
 })();
