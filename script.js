@@ -273,7 +273,6 @@ addEventListener('resize', setNav); setNav();
   const deck = document.getElementById('deck');
   if (!deck) return;
   const cards = [...deck.querySelectorAll('.mcard')];
-  const figs = [...document.querySelectorAll('.member')];
   const dots = [...document.querySelectorAll('.dot')];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let idx = -1;
@@ -284,7 +283,6 @@ addEventListener('resize', setNav); setNav();
     if (i === idx) return;
     idx = i;
     cards.forEach((c, k) => c.classList.toggle('active', k === i));
-    figs.forEach((f, k) => f.classList.toggle('active', k === i));
     dots.forEach((d, k) => d.classList.toggle('active', k === i));
   }
   function goTo(i) {
@@ -296,12 +294,6 @@ addEventListener('resize', setNav); setNav();
   document.getElementById('prev').addEventListener('click', () => goTo(idx - 1));
   document.getElementById('next').addEventListener('click', () => goTo(idx + 1));
   dots.forEach((d) => d.addEventListener('click', () => goTo(+d.dataset.i)));
-  figs.forEach((f) => {
-    f.addEventListener('click', () => goTo(+f.dataset.i));
-    f.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo(+f.dataset.i); }
-    });
-  });
   // setas do teclado: valem enquanto esta seção está no centro da tela
   addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -709,7 +701,7 @@ addEventListener('resize', setNav); setNav();
 
 // Encerramento: frase final, prisma invertido e retorno automático ao topo com a inversão do prisma
 (() => {
-  const outro = document.getElementById('escuro');
+  const outro = document.getElementById('ouvir');
   const fin = document.getElementById('ciclo');
   if (!outro || !fin) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
