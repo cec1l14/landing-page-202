@@ -30,11 +30,13 @@ a{color:inherit;text-decoration:none}
 }
 .prism-wrap{position:relative;width:100%;height:clamp(300px,36vw,640px)}
 .prism-wrap canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+/* o SVG estático é só um plano B: fica escondido e só aparece se o 3D não carregar */
+.prism{display:none;width:100%;height:100%}
+.prism-wrap.no3d .prism{display:block}
 .prism-wrap.ready .prism{display:none}
-.prism{display:block;width:100%;height:100%}
 .hero-text{padding:0 1rem}
 .hero-text h1{
-  font-family:Helvetica,Arial,sans-serif;font-weight:300;letter-spacing:.35em;
+  font-family:Helvetica,Arial,sans-serif;font-weight:300;letter-spacing:.22em;padding-left:.22em; /* o recuo compensa o espaço após a última letra e mantém o título centralizado */
   font-size:clamp(2rem,7vw,4.5rem);text-transform:uppercase;margin-top:1rem;
 }
 .hero-text p{color:var(--muted);margin:.5rem 0 1.5rem}

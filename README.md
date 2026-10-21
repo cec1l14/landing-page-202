@@ -84,7 +84,7 @@ Depois acesse `http://localhost:8000`.
 
 - **Imagens e letras:** o projeto não usa as capas oficiais nem trechos de letras. As capas dos álbuns, o prisma e o vinil são ilustrações próprias, inspiradas nos discos. As citações que seguem o mouse são títulos de músicas.
 - **Conteúdo:** os textos sobre a banda e os álbuns foram escritos a partir de fatos conhecidos. As durações são aproximadas. Vale revisar as datas e os detalhes antes de usar o conteúdo em outro lugar.
-- **Dependência de internet:** sem acesso ao CDN do Three.js, a cena 3D não carrega. No topo, a página mostra uma versão estática do prisma.
+- **Dependência de internet:** sem acesso ao CDN do Three.js, a cena 3D não carrega. Se o 3D não carregar em cerca de 6 segundos, o topo passa a mostrar uma versão estática do prisma. Durante o carregamento normal, essa versão fica escondida.
 - **Rolagem guiada:** em telas grandes, algumas seções conduzem a rolagem, como a que sai do prisma e as de álbuns e linha do tempo. É uma escolha de design para o efeito de viagem.
 
 ## Publicação

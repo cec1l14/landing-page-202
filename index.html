@@ -620,6 +620,7 @@ function initPrism(wrap, inverted) {
     });
     wrap.classList.add('ready');
   } catch (err) {
+    wrap.classList.add('no3d');
     console.warn('3D indisponível, usando versão estática.', err);
   }
 }

@@ -791,3 +791,11 @@ addEventListener('resize', setNav); setNav();
   });
   check();
 })();
+
+// Plano B do prisma: se o 3D não carregar em alguns segundos (sem internet, por exemplo), mostra a versão estática
+setTimeout(() => {
+  for (const id of ['prism3d']) {
+    const w = document.getElementById(id);
+    if (w && !w.classList.contains('ready')) w.classList.add('no3d');
+  }
+}, 6000);
