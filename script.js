@@ -26,9 +26,16 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // Pontos de luz: estrelas que cintilam no fundo da seção do prisma e faíscas que surgem junto ao mouse
-(() => {
-  const hero = document.getElementById('topo');
-  const cv = document.getElementById('stars');
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function initStars(hero, cv) {
   if (!hero || !cv) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ctx = cv.getContext('2d');
@@ -38,16 +45,17 @@ window.addEventListener('scroll', () => {
   let lastT = 0;
 
   function makeStars() {
+    const rnd = mulberry32(2024);
     const n = Math.round((w * h) / 2400);
     stars = Array.from({ length: n }, () => {
-      const big = Math.random() < 0.06;
+      const big = rnd() < 0.06;
       return {
-        x: Math.random() * w, y: Math.random() * h,
-        r: big ? 1.4 + Math.random() * 1.0 : 0.4 + Math.random() * 0.9,
-        base: 0.4 + Math.random() * 0.6,
-        speed: 0.4 + Math.random() * 1.4, phase: Math.random() * Math.PI * 2,
+        x: rnd() * w, y: rnd() * h,
+        r: big ? 1.4 + rnd() * 1.0 : 0.4 + rnd() * 0.9,
+        base: 0.4 + rnd() * 0.6,
+        speed: 0.4 + rnd() * 1.4, phase: rnd() * Math.PI * 2,
         // quase branco, com um leve tom de cor
-        hue: Math.random() * 360, big
+        hue: rnd() * 360, big
       };
     });
   }
@@ -136,7 +144,9 @@ window.addEventListener('scroll', () => {
 
   addEventListener('resize', resize); resize();
   if (!reduce) requestAnimationFrame(frame);
-})();
+}
+initStars(document.getElementById('topo'), document.getElementById('stars'));
+initStars(document.getElementById('ciclo'), document.getElementById('starsEnd'));
 
 // Altura da barra de navegação, usada para encaixar as seções na janela
 const nav = document.querySelector('.nav');
@@ -695,4 +705,97 @@ addEventListener('resize', setNav); setNav();
   layout();
   setTimeout(layout, 300);
   requestAnimationFrame(frame);
+})();
+
+// Encerramento: frase final, prisma invertido e retorno automático ao topo com a inversão do prisma
+(() => {
+  const outro = document.getElementById('escuro');
+  const fin = document.getElementById('ciclo');
+  if (!outro || !fin) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+  const navH = () => nav.offsetHeight;
+  const alignTop = (el) => el.offsetTop - navH();
+  const visibleFrac = (el) => {
+    const r = el.getBoundingClientRect();
+    return (Math.min(r.bottom, innerHeight) - Math.max(r.top, navH())) / (innerHeight - navH());
+  };
+
+  // a frase aparece ao entrar na tela (e reaparece nas próximas visitas)
+  new IntersectionObserver((es) => es.forEach((e) => outro.classList.toggle('in', e.isIntersecting)),
+    { threshold: 0.45 }).observe(outro);
+
+  let busy = false, snapLock = false, timer = null;
+
+  // salto instantâneo ao topo (sem rolagem suave, para não mostrar as seções do meio):
+  // o comportamento "auto" fica ativo por alguns quadros, até a posição ser aplicada de fato
+  function jumpTop() {
+    const el = document.documentElement;
+    el.style.scrollBehavior = 'auto';
+    scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.scrollingElement.scrollTop = 0;
+    setTimeout(() => { el.style.scrollBehavior = ''; }, 250);
+    const hint = document.querySelector('#topo .scroll-hint');
+    if (hint) { hint.classList.remove('fade-in'); void hint.offsetWidth; hint.classList.add('fade-in'); }
+  }
+
+  // o prisma e as luzes completam a volta no lugar (as estrelas ficam paradas); ao final, a cena é idêntica à do topo
+  // e a página volta ao início sem que a troca seja percebida
+  async function flip() {
+    if (busy) return;
+    busy = true;
+    clearTimeout(timer); timer = null;
+    const target = alignTop(fin);
+    if (Math.abs(scrollY - target) > 2) {
+      scrollTo({ top: target, behavior: reduce ? 'auto' : 'smooth' });
+      await delay(reduce ? 60 : 700);
+    }
+    if (reduce) { jumpTop(); busy = false; return; }
+    const DUR = 1500;
+    document.getElementById('prism3dEnd').dispatchEvent(new CustomEvent('prism-flip', { detail: { duration: DUR } }));
+    await delay(DUR + 120);
+    jumpTop();
+    await delay(700);   // período de silêncio: ignora a rolagem que ainda esteja em curso
+    busy = false;
+    check();
+  }
+
+  // depois de alguns segundos olhando o prisma invertido, o retorno ao topo é automático
+  function check() {
+    const on = visibleFrac(fin) >= 0.75 && !busy;
+    if (on && !timer) {
+      timer = setTimeout(() => { timer = null; if (visibleFrac(fin) >= 0.75) flip(); }, 5600);
+    } else if (!on && timer) {
+      clearTimeout(timer); timer = null;
+    }
+  }
+  addEventListener('scroll', check, { passive: true });
+  addEventListener('resize', check);
+
+  // encaixe suave ao se aproximar de cada uma das duas seções finais
+  function snapTo(el) {
+    snapLock = true;
+    scrollTo({ top: alignTop(el), behavior: reduce ? 'auto' : 'smooth' });
+    setTimeout(() => { snapLock = false; }, reduce ? 60 : 950);
+  }
+  // durante o giro e logo depois do salto, nenhuma outra rolagem (nem a do topo) deve agir
+  addEventListener('wheel', (e) => {
+    if (busy) { e.preventDefault(); e.stopImmediatePropagation(); }
+  }, { passive: false, capture: true });
+  addEventListener('wheel', (e) => {
+    if (busy || snapLock) { e.preventDefault(); return; }
+    if (e.deltaY <= 8) return;
+    if (visibleFrac(fin) >= 0.75) { e.preventDefault(); flip(); return; }   // rolar no fim também reinicia o ciclo
+    for (const el of [outro, fin]) {
+      const r = el.getBoundingClientRect();
+      if (r.top > navH() + 6 && r.top < innerHeight * 0.55) { e.preventDefault(); snapTo(el); return; }
+    }
+  }, { passive: false });
+  addEventListener('keydown', (e) => {
+    if (e.target.closest('input,textarea,select,button')) return;
+    if (['ArrowDown', 'PageDown', ' ', 'End'].includes(e.key) && visibleFrac(fin) >= 0.75) {
+      e.preventDefault(); flip();
+    }
+  });
+  check();
 })();
