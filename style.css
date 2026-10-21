@@ -236,3 +236,52 @@ footer p{max-width:700px;margin:1.5rem auto 0;padding:0 1rem}
 .member .fig .hr{fill:#090909}
 .member .fig .d{fill:none;stroke-width:1.5;opacity:.85}
 .member .fig .pg{fill:rgba(255,255,255,.2);stroke-width:1.4}
+
+/* História: texto à esquerda e, na borda direita, um vinil grande giratório mostrando só metade */
+.hist{
+  position:relative;overflow:hidden;
+  min-height:calc(100vh - var(--nav,44px));padding:3rem 1.5rem 6.5rem;
+  display:flex;align-items:center;
+  --d:clamp(380px,48vw,720px);
+}
+.hist > .hist-inner{width:100%;max-width:1200px;margin:0 auto;display:block}
+.hist .hist-text{max-width:min(600px,52%)}
+.hist .text{max-width:none}
+.hist .text p{font-size:.98rem;line-height:1.65;margin-bottom:.9rem}
+
+/* o disco avança 25% para fora da borda direita da tela: cerca de 75% dele aparece */
+.record{
+  position:absolute;top:50%;right:0;width:var(--d);height:var(--d);
+  transform:translate(25%,-50%);pointer-events:none;
+}
+.disc{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 60px rgba(0,0,0,.9),0 0 0 2px #1d1d1d}
+.disc .spin{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle,transparent 0 45%,rgba(255,255,255,.05) 45.4%,transparent 46%),
+    repeating-radial-gradient(circle,#101010 0 1.1px,#242424 1.6px 2.4px);
+  animation:spin 6s linear infinite;
+}
+.disc .label{
+  position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px #1a1a1a,0 0 24px rgba(0,0,0,.8);
+}
+.disc .label svg{display:block;width:100%;height:100%}
+.disc .sheen{
+  position:absolute;inset:0;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+  background:conic-gradient(from 20deg,transparent 0 8%,rgba(255,255,255,.14) 12%,transparent 18%,
+    transparent 52%,rgba(255,255,255,.1) 58%,transparent 66%);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* celular: o texto vem primeiro e o vinil aparece abaixo, mostrando a metade de cima */
+@media (max-width:860px){
+  .hist{--d:min(92vw,520px);flex-direction:column;align-items:stretch;padding-bottom:7rem}
+  .hist .hist-text{max-width:none}
+  .record{
+    position:relative;top:auto;right:auto;transform:none;
+    width:100%;height:calc(var(--d) * .75);margin:2rem 0 0;overflow:hidden;
+  }
+  .record .disc{width:var(--d);height:var(--d);inset:auto;left:50%;top:0;transform:translateX(-50%)}
+}
+@media (prefers-reduced-motion:reduce){.disc .spin{animation:none}}
